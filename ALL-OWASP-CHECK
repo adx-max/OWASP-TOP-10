@@ -1,0 +1,52 @@
+print('CREATED BY ANESTUS UDUME FROM BENTECH SECURITY, THIS SCRIPT CHECKS FOR ALL OWASP 10, YOU CAN DONATE TO ME TO SUPPORT ME')
+import requests
+
+url = 'https://example.com'
+
+# Test for SQL injection vulnerability
+search_query = "'; DROP TABLE users;--"
+response = requests.get(url + '/search', params={'q': search_query})
+if 'error' in response.text.lower() or 'syntax error' in response.text.lower():
+    print('SQL injection vulnerability found')
+
+# Test for broken authentication and session management vulnerability
+credentials = {'username': 'admin', 'password': 'password'}
+response = requests.post(url + '/login', data=credentials)
+if response.status_code != 200:
+    print('Broken authentication and session management vulnerability found')
+
+# Test for XSS vulnerability
+payload = '<script>alert("XSS");</script>'
+response = requests.post(url + '/contact', data={'name': payload, 'message': payload})
+if payload in response.text:
+    print('XSS vulnerability found')
+
+# Test for broken access control vulnerability
+response = requests.get(url + '/admin', cookies={'session_id': '1234'})
+if response.status_code == 200:
+    print('Broken access control vulnerability found')
+
+# Test for security misconfiguration vulnerability
+response = requests.get(url + '/.git')
+if response.status_code == 200:
+    print('Security misconfiguration vulnerability found')
+
+# Test for insecure cryptographic storage vulnerability
+response = requests.get(url + '/passwords.txt')
+if response.status_code == 200:
+    print('Insecure cryptographic storage vulnerability found')
+
+# Test for insufficient transport layer protection vulnerability
+response = requests.get(url.replace('http://', 'https://'))
+if 'certificate' in response.text.lower():
+    print('Insufficient transport layer protection vulnerability found')
+
+# Test for unvalidated/unsanitized input vulnerability
+response = requests.post(url + '/comment', data={'name': '<script>alert("XSS");</script>', 'comment': '<script>alert("XSS");</script>'})
+if '<script>' in response.text:
+    print('Unvalidated/unsanitized input vulnerability found')
+
+# Test for insufficient logging and monitoring vulnerability
+response = requests.get(url + '/admin', cookies={'session_id': '1234'})
+if response.status_code != 200:
+    print('Insufficient logging and monitoring vulnerability found')

